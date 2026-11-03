@@ -1,0 +1,216 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_cuentas_por_pagar" targetNamespace="https://nexos-digitales.example/academic/bpmn">
+  <bpmn:collaboration id="Collaboration_cuentas_por_pagar">
+    <bpmn:participant id="P_Proveedor" name="Proveedor"/>
+    <bpmn:participant id="P_Nexos2" name="Nexos Digitales S.R.L." processRef="Process_cuentas_por_pagar"/>
+    <bpmn:participant id="P_Banco2" name="Entidad bancaria"/>
+    <bpmn:messageFlow id="M2_Proveedor" name="Comprobante" sourceRef="P_Proveedor" targetRef="S_InicioPago"/>
+    <bpmn:messageFlow id="M2_BancoReq" name="Orden" sourceRef="T_Banco" targetRef="P_Banco2"/>
+    <bpmn:messageFlow id="M2_BancoResp" name="Confirmación" sourceRef="P_Banco2" targetRef="T_Banco"/>
+  </bpmn:collaboration>
+  <bpmn:process id="Process_cuentas_por_pagar" isExecutable="false" name="BPMN 2.0 - Registro y pago de obligaciones a proveedores">
+    <bpmn:laneSet id="LaneSet_cuentas_por_pagar">
+      <bpmn:lane id="L_Fin2" name="Finanzas y Control">
+        <bpmn:flowNodeRef>S_InicioPago</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Obligacion</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_CorrPago</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Programar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_ErrorBanco</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E_Pendiente</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_Sis2" name="Sistema (automático)">
+        <bpmn:flowNodeRef>T_Validar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>G_Validez</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Banco</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>G_Banco</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Pago</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E_Pago</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="S_InicioPago" name="Obligación recibida">
+      <bpmn:outgoing>F2_1</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="T_Obligacion" name="Registrar obligación y vencimiento">
+      <bpmn:incoming>F2_1</bpmn:incoming>
+      <bpmn:outgoing>F2_2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Validar" name="Verificar proveedor, importe y saldo">
+      <bpmn:incoming>F2_2</bpmn:incoming>
+      <bpmn:incoming>F2_5</bpmn:incoming>
+      <bpmn:outgoing>F2_3</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="G_Validez" name="¿Datos válidos?">
+      <bpmn:incoming>F2_3</bpmn:incoming>
+      <bpmn:outgoing>F2_4</bpmn:outgoing>
+      <bpmn:outgoing>F2_6</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="T_CorrPago" name="Corregir datos faltantes">
+      <bpmn:incoming>F2_4</bpmn:incoming>
+      <bpmn:outgoing>F2_5</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Programar" name="Autorizar y programar pago">
+      <bpmn:incoming>F2_6</bpmn:incoming>
+      <bpmn:outgoing>F2_7</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Banco" name="Enviar instrucción al banco">
+      <bpmn:incoming>F2_7</bpmn:incoming>
+      <bpmn:outgoing>F2_8</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="G_Banco" name="¿Confirmado?">
+      <bpmn:incoming>F2_8</bpmn:incoming>
+      <bpmn:outgoing>F2_9</bpmn:outgoing>
+      <bpmn:outgoing>F2_11</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="T_ErrorBanco" name="Analizar pago rechazado">
+      <bpmn:incoming>F2_9</bpmn:incoming>
+      <bpmn:outgoing>F2_10</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="E_Pendiente" name="Pago pendiente">
+      <bpmn:incoming>F2_10</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="T_Pago" name="Registrar pago y recalcular saldo">
+      <bpmn:incoming>F2_11</bpmn:incoming>
+      <bpmn:outgoing>F2_12</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="E_Pago" name="Obligación actualizada">
+      <bpmn:incoming>F2_12</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="F2_1" sourceRef="S_InicioPago" targetRef="T_Obligacion"/>
+    <bpmn:sequenceFlow id="F2_2" sourceRef="T_Obligacion" targetRef="T_Validar"/>
+    <bpmn:sequenceFlow id="F2_3" sourceRef="T_Validar" targetRef="G_Validez"/>
+    <bpmn:sequenceFlow id="F2_4" sourceRef="G_Validez" targetRef="T_CorrPago" name="No"/>
+    <bpmn:sequenceFlow id="F2_5" sourceRef="T_CorrPago" targetRef="T_Validar"/>
+    <bpmn:sequenceFlow id="F2_6" sourceRef="G_Validez" targetRef="T_Programar" name="Sí"/>
+    <bpmn:sequenceFlow id="F2_7" sourceRef="T_Programar" targetRef="T_Banco"/>
+    <bpmn:sequenceFlow id="F2_8" sourceRef="T_Banco" targetRef="G_Banco"/>
+    <bpmn:sequenceFlow id="F2_9" sourceRef="G_Banco" targetRef="T_ErrorBanco" name="No"/>
+    <bpmn:sequenceFlow id="F2_10" sourceRef="T_ErrorBanco" targetRef="E_Pendiente"/>
+    <bpmn:sequenceFlow id="F2_11" sourceRef="G_Banco" targetRef="T_Pago" name="Sí"/>
+    <bpmn:sequenceFlow id="F2_12" sourceRef="T_Pago" targetRef="E_Pago"/>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_cuentas_por_pagar">
+    <bpmndi:BPMNPlane id="Plane_cuentas_por_pagar" bpmnElement="Collaboration_cuentas_por_pagar">
+      <bpmndi:BPMNShape id="Shape_P_Proveedor" bpmnElement="P_Proveedor" isHorizontal="true">
+        <dc:Bounds x="35" y="45" width="1735" height="62"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_P_Nexos2" bpmnElement="P_Nexos2" isHorizontal="true">
+        <dc:Bounds x="35" y="132" width="1735" height="438"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_P_Banco2" bpmnElement="P_Banco2" isHorizontal="true">
+        <dc:Bounds x="35" y="595" width="1735" height="60"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_L_Fin2" bpmnElement="L_Fin2" isHorizontal="true">
+        <dc:Bounds x="74" y="132" width="1696" height="205"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_L_Sis2" bpmnElement="L_Sis2" isHorizontal="true">
+        <dc:Bounds x="74" y="337" width="1696" height="233"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_S_InicioPago" bpmnElement="S_InicioPago">
+        <dc:Bounds x="146" y="214" width="46" height="46"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_T_Obligacion" bpmnElement="T_Obligacion">
+        <dc:Bounds x="264" y="198" width="145" height="75"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_T_Validar" bpmnElement="T_Validar">
+        <dc:Bounds x="481" y="420" width="148" height="80"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_G_Validez" bpmnElement="G_Validez">
+        <dc:Bounds x="686" y="434" width="54" height="54"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_T_CorrPago" bpmnElement="T_CorrPago">
+        <dc:Bounds x="673" y="196" width="145" height="72"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_T_Programar" bpmnElement="T_Programar">
+        <dc:Bounds x="862" y="198" width="140" height="70"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_T_Banco" bpmnElement="T_Banco">
+        <dc:Bounds x="1071" y="421" width="143" height="78"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_G_Banco" bpmnElement="G_Banco">
+        <dc:Bounds x="1274" y="432" width="56" height="56"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_T_ErrorBanco" bpmnElement="T_ErrorBanco">
+        <dc:Bounds x="1324" y="201" width="142" height="75"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_E_Pendiente" bpmnElement="E_Pendiente">
+        <dc:Bounds x="1490" y="215" width="46" height="46"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_T_Pago" bpmnElement="T_Pago">
+        <dc:Bounds x="1437" y="422" width="144" height="76"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_E_Pago" bpmnElement="E_Pago">
+        <dc:Bounds x="1660" y="440" width="48" height="48"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_F2_1" bpmnElement="F2_1">
+        <di:waypoint x="192" y="237"/>
+        <di:waypoint x="264" y="237"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F2_2" bpmnElement="F2_2">
+        <di:waypoint x="409" y="233"/>
+        <di:waypoint x="446" y="233"/>
+        <di:waypoint x="446" y="460"/>
+        <di:waypoint x="481" y="460"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F2_3" bpmnElement="F2_3">
+        <di:waypoint x="629" y="460"/>
+        <di:waypoint x="686" y="460"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F2_4" bpmnElement="F2_4">
+        <di:waypoint x="713" y="434"/>
+        <di:waypoint x="713" y="268"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F2_5" bpmnElement="F2_5">
+        <di:waypoint x="673" y="230"/>
+        <di:waypoint x="650" y="230"/>
+        <di:waypoint x="650" y="390"/>
+        <di:waypoint x="555" y="390"/>
+        <di:waypoint x="555" y="420"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F2_6" bpmnElement="F2_6">
+        <di:waypoint x="740" y="460"/>
+        <di:waypoint x="825" y="460"/>
+        <di:waypoint x="825" y="233"/>
+        <di:waypoint x="862" y="233"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F2_7" bpmnElement="F2_7">
+        <di:waypoint x="1002" y="234"/>
+        <di:waypoint x="1036" y="234"/>
+        <di:waypoint x="1036" y="459"/>
+        <di:waypoint x="1071" y="459"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F2_8" bpmnElement="F2_8">
+        <di:waypoint x="1214" y="460"/>
+        <di:waypoint x="1274" y="460"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F2_9" bpmnElement="F2_9">
+        <di:waypoint x="1302" y="432"/>
+        <di:waypoint x="1302" y="238"/>
+        <di:waypoint x="1324" y="238"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F2_10" bpmnElement="F2_10">
+        <di:waypoint x="1466" y="238"/>
+        <di:waypoint x="1490" y="238"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F2_11" bpmnElement="F2_11">
+        <di:waypoint x="1330" y="460"/>
+        <di:waypoint x="1437" y="460"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F2_12" bpmnElement="F2_12">
+        <di:waypoint x="1581" y="460"/>
+        <di:waypoint x="1660" y="460"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_M2_Proveedor" bpmnElement="M2_Proveedor">
+        <di:waypoint x="168" y="107"/>
+        <di:waypoint x="168" y="214"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_M2_BancoReq" bpmnElement="M2_BancoReq">
+        <di:waypoint x="1129" y="499"/>
+        <di:waypoint x="1129" y="595"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_M2_BancoResp" bpmnElement="M2_BancoResp">
+        <di:waypoint x="1190" y="595"/>
+        <di:waypoint x="1190" y="499"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

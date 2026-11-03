@@ -1,0 +1,342 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_facturacion_cobranzas" targetNamespace="https://nexos-digitales.example/academic/bpmn">
+  <bpmn:collaboration id="Collaboration_facturacion_cobranzas">
+    <bpmn:participant id="P_Cliente" name="Cliente"/>
+    <bpmn:participant id="P_Nexos" name="Nexos Digitales S.R.L." processRef="Process_facturacion_cobranzas"/>
+    <bpmn:participant id="P_ARCA" name="ARCA"/>
+    <bpmn:participant id="P_Banco" name="Entidad bancaria"/>
+    <bpmn:messageFlow id="M_Cliente" name="Solicitud" sourceRef="P_Cliente" targetRef="S_Inicio"/>
+    <bpmn:messageFlow id="M_ARCA_Req" name="Solicitud fiscal" sourceRef="T_Arca" targetRef="P_ARCA"/>
+    <bpmn:messageFlow id="M_ARCA_Resp" name="Respuesta ARCA" sourceRef="P_ARCA" targetRef="T_Arca"/>
+    <bpmn:messageFlow id="M_Banco" name="Movimiento bancario" sourceRef="P_Banco" targetRef="I_Cobro"/>
+  </bpmn:collaboration>
+  <bpmn:process id="Process_facturacion_cobranzas" isExecutable="false" name="BPMN 2.0 - Facturación electrónica y aplicación de cobranzas">
+    <bpmn:laneSet id="LaneSet_facturacion_cobranzas">
+      <bpmn:lane id="L_Comercial" name="Comercialización">
+        <bpmn:flowNodeRef>S_Inicio</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Contrato</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Corregir</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Ajustar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Diferencia</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_Finanzas" name="Finanzas y Control">
+        <bpmn:flowNodeRef>T_Revisar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>G_Revisar</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Rechazo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E_Rechazo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>I_Cobro</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_ValidarCobro</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>G_Cobro</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="L_Sistema" name="Sistema (automático)">
+        <bpmn:flowNodeRef>T_Datos</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>G_Datos</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Arca</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>G_Arca</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_RegistrarFactura</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>T_Saldo</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E_Fin</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="S_Inicio" name="Solicitud de factura">
+      <bpmn:outgoing>F_01</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="T_Contrato" name="Comprobar contrato vigente">
+      <bpmn:incoming>F_01</bpmn:incoming>
+      <bpmn:outgoing>F_02</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Datos" name="Recuperar horas y datos del contrato">
+      <bpmn:incoming>F_02</bpmn:incoming>
+      <bpmn:incoming>F_05</bpmn:incoming>
+      <bpmn:outgoing>F_03</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="G_Datos" name="¿Datos completos?">
+      <bpmn:incoming>F_03</bpmn:incoming>
+      <bpmn:outgoing>F_04</bpmn:outgoing>
+      <bpmn:outgoing>F_06</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="T_Corregir" name="Corregir información">
+      <bpmn:incoming>F_04</bpmn:incoming>
+      <bpmn:outgoing>F_05</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Revisar" name="Revisar borrador de factura">
+      <bpmn:incoming>F_06</bpmn:incoming>
+      <bpmn:incoming>F_09</bpmn:incoming>
+      <bpmn:outgoing>F_07</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="G_Revisar" name="¿Aprobado?">
+      <bpmn:incoming>F_07</bpmn:incoming>
+      <bpmn:outgoing>F_08</bpmn:outgoing>
+      <bpmn:outgoing>F_10</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="T_Ajustar" name="Ajustar condiciones">
+      <bpmn:incoming>F_08</bpmn:incoming>
+      <bpmn:outgoing>F_09</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Arca" name="Solicitar autorización electrónica">
+      <bpmn:incoming>F_10</bpmn:incoming>
+      <bpmn:outgoing>F_11</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="G_Arca" name="¿Autorizado?">
+      <bpmn:incoming>F_11</bpmn:incoming>
+      <bpmn:outgoing>F_12</bpmn:outgoing>
+      <bpmn:outgoing>F_14</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="T_Rechazo" name="Analizar rechazo fiscal">
+      <bpmn:incoming>F_12</bpmn:incoming>
+      <bpmn:outgoing>F_13</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="E_Rechazo" name="Emisión pendiente">
+      <bpmn:incoming>F_13</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="T_RegistrarFactura" name="Guardar factura y vencimiento">
+      <bpmn:incoming>F_14</bpmn:incoming>
+      <bpmn:outgoing>F_15</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:intermediateCatchEvent id="I_Cobro" name="Aviso de cobro">
+      <bpmn:messageEventDefinition id="MsgEvent_I_Cobro"/>
+      <bpmn:incoming>F_15</bpmn:incoming>
+      <bpmn:outgoing>F_16</bpmn:outgoing>
+    </bpmn:intermediateCatchEvent>
+    <bpmn:task id="T_ValidarCobro" name="Validar cobro e importe">
+      <bpmn:incoming>F_16</bpmn:incoming>
+      <bpmn:incoming>F_19</bpmn:incoming>
+      <bpmn:outgoing>F_17</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="G_Cobro" name="¿Cobro válido?">
+      <bpmn:incoming>F_17</bpmn:incoming>
+      <bpmn:outgoing>F_18</bpmn:outgoing>
+      <bpmn:outgoing>F_20</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:task id="T_Diferencia" name="Consultar diferencia con el cliente">
+      <bpmn:incoming>F_18</bpmn:incoming>
+      <bpmn:outgoing>F_19</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="T_Saldo" name="Aplicar cobro y actualizar saldo">
+      <bpmn:incoming>F_20</bpmn:incoming>
+      <bpmn:outgoing>F_21</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="E_Fin" name="Saldo actualizado">
+      <bpmn:incoming>F_21</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="F_01" sourceRef="S_Inicio" targetRef="T_Contrato"/>
+    <bpmn:sequenceFlow id="F_02" sourceRef="T_Contrato" targetRef="T_Datos"/>
+    <bpmn:sequenceFlow id="F_03" sourceRef="T_Datos" targetRef="G_Datos"/>
+    <bpmn:sequenceFlow id="F_04" sourceRef="G_Datos" targetRef="T_Corregir" name="No"/>
+    <bpmn:sequenceFlow id="F_05" sourceRef="T_Corregir" targetRef="T_Datos"/>
+    <bpmn:sequenceFlow id="F_06" sourceRef="G_Datos" targetRef="T_Revisar" name="Sí"/>
+    <bpmn:sequenceFlow id="F_07" sourceRef="T_Revisar" targetRef="G_Revisar"/>
+    <bpmn:sequenceFlow id="F_08" sourceRef="G_Revisar" targetRef="T_Ajustar" name="No"/>
+    <bpmn:sequenceFlow id="F_09" sourceRef="T_Ajustar" targetRef="T_Revisar"/>
+    <bpmn:sequenceFlow id="F_10" sourceRef="G_Revisar" targetRef="T_Arca" name="Sí"/>
+    <bpmn:sequenceFlow id="F_11" sourceRef="T_Arca" targetRef="G_Arca"/>
+    <bpmn:sequenceFlow id="F_12" sourceRef="G_Arca" targetRef="T_Rechazo" name="No"/>
+    <bpmn:sequenceFlow id="F_13" sourceRef="T_Rechazo" targetRef="E_Rechazo"/>
+    <bpmn:sequenceFlow id="F_14" sourceRef="G_Arca" targetRef="T_RegistrarFactura" name="Sí"/>
+    <bpmn:sequenceFlow id="F_15" sourceRef="T_RegistrarFactura" targetRef="I_Cobro"/>
+    <bpmn:sequenceFlow id="F_16" sourceRef="I_Cobro" targetRef="T_ValidarCobro"/>
+    <bpmn:sequenceFlow id="F_17" sourceRef="T_ValidarCobro" targetRef="G_Cobro"/>
+    <bpmn:sequenceFlow id="F_18" sourceRef="G_Cobro" targetRef="T_Diferencia" name="No"/>
+    <bpmn:sequenceFlow id="F_19" sourceRef="T_Diferencia" targetRef="T_ValidarCobro"/>
+    <bpmn:sequenceFlow id="F_20" sourceRef="G_Cobro" targetRef="T_Saldo" name="Sí"/>
+    <bpmn:sequenceFlow id="F_21" sourceRef="T_Saldo" targetRef="E_Fin"/>
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_facturacion_cobranzas">
+    <bpmndi:BPMNPlane id="Plane_facturacion_cobranzas" bpmnElement="Collaboration_facturacion_cobranzas">
+      <bpmndi:BPMNShape id="Shape_P_Cliente" bpmnElement="P_Cliente" isHorizontal="true">
+        <dc:Bounds x="35" y="44" width="2185" height="65"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_P_Nexos" bpmnElement="P_Nexos" isHorizontal="true">
+        <dc:Bounds x="35" y="132" width="2185" height="560"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_P_ARCA" bpmnElement="P_ARCA" isHorizontal="true">
+        <dc:Bounds x="35" y="719" width="2185" height="58"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_P_Banco" bpmnElement="P_Banco" isHorizontal="true">
+        <dc:Bounds x="35" y="795" width="2185" height="58"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_L_Comercial" bpmnElement="L_Comercial" isHorizontal="true">
+        <dc:Bounds x="74" y="132" width="2146" height="160"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_L_Finanzas" bpmnElement="L_Finanzas" isHorizontal="true">
+        <dc:Bounds x="74" y="292" width="2146" height="176"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_L_Sistema" bpmnElement="L_Sistema" isHorizontal="true">
+        <dc:Bounds x="74" y="468" width="2146" height="224"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_S_Inicio" bpmnElement="S_Inicio">
+        <dc:Bounds x="160" y="193" width="46" height="46"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_T_Contrato" bpmnElement="T_Contrato">
+        <dc:Bounds x="264" y="180" width="132" height="75"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_T_Datos" bpmnElement="T_Datos">
+        <dc:Bounds x="446" y="545" width="132" height="70"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_G_Datos" bpmnElement="G_Datos">
+        <dc:Bounds x="642" y="554" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_T_Corregir" bpmnElement="T_Corregir">
+        <dc:Bounds x="618" y="179" width="140" height="72"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_T_Revisar" bpmnElement="T_Revisar">
+        <dc:Bounds x="803" y="342" width="138" height="76"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_G_Revisar" bpmnElement="G_Revisar">
+        <dc:Bounds x="989" y="355" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_T_Ajustar" bpmnElement="T_Ajustar">
+        <dc:Bounds x="1000" y="184" width="134" height="70"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_T_Arca" bpmnElement="T_Arca">
+        <dc:Bounds x="1138" y="544" width="152" height="73"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_G_Arca" bpmnElement="G_Arca">
+        <dc:Bounds x="1342" y="556" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_T_Rechazo" bpmnElement="T_Rechazo">
+        <dc:Bounds x="1420" y="345" width="135" height="67"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_E_Rechazo" bpmnElement="E_Rechazo">
+        <dc:Bounds x="1594" y="358" width="43" height="43"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_T_RegistrarFactura" bpmnElement="T_RegistrarFactura">
+        <dc:Bounds x="1472" y="545" width="150" height="74"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_I_Cobro" bpmnElement="I_Cobro">
+        <dc:Bounds x="1700" y="363" width="46" height="46"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_T_ValidarCobro" bpmnElement="T_ValidarCobro">
+        <dc:Bounds x="1785" y="345" width="132" height="73"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_G_Cobro" bpmnElement="G_Cobro">
+        <dc:Bounds x="1952" y="357" width="50" height="50"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_T_Diferencia" bpmnElement="T_Diferencia">
+        <dc:Bounds x="1985" y="180" width="160" height="73"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_T_Saldo" bpmnElement="T_Saldo">
+        <dc:Bounds x="2020" y="544" width="126" height="73"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Shape_E_Fin" bpmnElement="E_Fin">
+        <dc:Bounds x="2162" y="557" width="46" height="46"/>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Edge_F_01" bpmnElement="F_01">
+        <di:waypoint x="206" y="216"/>
+        <di:waypoint x="264" y="216"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F_02" bpmnElement="F_02">
+        <di:waypoint x="396" y="215"/>
+        <di:waypoint x="422" y="215"/>
+        <di:waypoint x="422" y="581"/>
+        <di:waypoint x="446" y="581"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F_03" bpmnElement="F_03">
+        <di:waypoint x="578" y="580"/>
+        <di:waypoint x="642" y="580"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F_04" bpmnElement="F_04">
+        <di:waypoint x="667" y="554"/>
+        <di:waypoint x="667" y="251"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F_05" bpmnElement="F_05">
+        <di:waypoint x="618" y="216"/>
+        <di:waypoint x="607" y="216"/>
+        <di:waypoint x="607" y="514"/>
+        <di:waypoint x="513" y="514"/>
+        <di:waypoint x="513" y="545"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F_06" bpmnElement="F_06">
+        <di:waypoint x="692" y="579"/>
+        <di:waypoint x="765" y="579"/>
+        <di:waypoint x="765" y="380"/>
+        <di:waypoint x="803" y="380"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F_07" bpmnElement="F_07">
+        <di:waypoint x="941" y="380"/>
+        <di:waypoint x="989" y="380"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F_08" bpmnElement="F_08">
+        <di:waypoint x="1014" y="355"/>
+        <di:waypoint x="1014" y="254"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F_09" bpmnElement="F_09">
+        <di:waypoint x="1000" y="219"/>
+        <di:waypoint x="880" y="219"/>
+        <di:waypoint x="880" y="342"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F_10" bpmnElement="F_10">
+        <di:waypoint x="1039" y="380"/>
+        <di:waypoint x="1104" y="380"/>
+        <di:waypoint x="1104" y="579"/>
+        <di:waypoint x="1138" y="579"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F_11" bpmnElement="F_11">
+        <di:waypoint x="1290" y="581"/>
+        <di:waypoint x="1342" y="581"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F_12" bpmnElement="F_12">
+        <di:waypoint x="1367" y="556"/>
+        <di:waypoint x="1367" y="379"/>
+        <di:waypoint x="1420" y="379"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F_13" bpmnElement="F_13">
+        <di:waypoint x="1555" y="379"/>
+        <di:waypoint x="1594" y="379"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F_14" bpmnElement="F_14">
+        <di:waypoint x="1392" y="581"/>
+        <di:waypoint x="1472" y="581"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F_15" bpmnElement="F_15">
+        <di:waypoint x="1622" y="581"/>
+        <di:waypoint x="1723" y="581"/>
+        <di:waypoint x="1723" y="409"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F_16" bpmnElement="F_16">
+        <di:waypoint x="1746" y="386"/>
+        <di:waypoint x="1785" y="386"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F_17" bpmnElement="F_17">
+        <di:waypoint x="1917" y="382"/>
+        <di:waypoint x="1952" y="382"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F_18" bpmnElement="F_18">
+        <di:waypoint x="1977" y="357"/>
+        <di:waypoint x="1977" y="217"/>
+        <di:waypoint x="1985" y="217"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F_19" bpmnElement="F_19">
+        <di:waypoint x="2064" y="180"/>
+        <di:waypoint x="2064" y="155"/>
+        <di:waypoint x="1852" y="155"/>
+        <di:waypoint x="1852" y="345"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F_20" bpmnElement="F_20">
+        <di:waypoint x="2002" y="382"/>
+        <di:waypoint x="2083" y="382"/>
+        <di:waypoint x="2083" y="544"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_F_21" bpmnElement="F_21">
+        <di:waypoint x="2146" y="580"/>
+        <di:waypoint x="2162" y="580"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_M_Cliente" bpmnElement="M_Cliente">
+        <di:waypoint x="182" y="109"/>
+        <di:waypoint x="182" y="193"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_M_ARCA_Req" bpmnElement="M_ARCA_Req">
+        <di:waypoint x="1200" y="617"/>
+        <di:waypoint x="1200" y="719"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_M_ARCA_Resp" bpmnElement="M_ARCA_Resp">
+        <di:waypoint x="1260" y="719"/>
+        <di:waypoint x="1260" y="617"/>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Edge_M_Banco" bpmnElement="M_Banco">
+        <di:waypoint x="1725" y="795"/>
+        <di:waypoint x="1725" y="409"/>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

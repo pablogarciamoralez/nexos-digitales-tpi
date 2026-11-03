@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1810" height="685" viewBox="0 0 1810 685">
+<title>BPMN 2.0 - Registro y pago de obligaciones a proveedores</title>
+<defs><marker id="seq" markerWidth="9" markerHeight="8" refX="8" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="none" stroke="#34465c" stroke-width="1.5"/></marker><marker id="msg" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto"><path d="M0,1 L9,5 L0,9" fill="none" stroke="#7489a1" stroke-width="1.5"/></marker></defs>
+<rect width="1810" height="685" fill="#ffffff"/>
+<text x="30" y="25" font-family="Arial, sans-serif" font-size="17" fill="#1d3446" font-weight="bold">BPMN 2.0 - Registro y pago de obligaciones a proveedores</text>
+<rect x="35" y="45" width="1735" height="62" fill="#edf2f5" stroke="#7890a0" stroke-width="1.4"/>
+<rect x="35" y="45" width="39" height="62" fill="#dce7ef" stroke="#7890a0" stroke-width="1"/>
+<text x="93" y="81.0" font-size="15" font-weight="bold" font-family="Arial" fill="#294559">Proveedor</text>
+<rect x="35" y="132" width="1735" height="438" fill="#f8fafc" stroke="#7890a0" stroke-width="1.4"/>
+<rect x="35" y="132" width="39" height="438" fill="#dce7ef" stroke="#7890a0" stroke-width="1"/>
+<text transform="translate(57,351.0) rotate(-90)" text-anchor="middle" font-size="15" font-weight="bold" font-family="Arial" fill="#294559">Nexos Digitales S.R.L.</text>
+<rect x="35" y="595" width="1735" height="60" fill="#edf2f5" stroke="#7890a0" stroke-width="1.4"/>
+<rect x="35" y="595" width="39" height="60" fill="#dce7ef" stroke="#7890a0" stroke-width="1"/>
+<text x="93" y="630.0" font-size="15" font-weight="bold" font-family="Arial" fill="#294559">Entidad bancaria</text>
+<rect x="74" y="132" width="1696" height="205" fill="none" stroke="#b9c7d0" stroke-width="1"/>
+<rect x="74" y="132" width="42" height="205" fill="#eaf0f4" stroke="#b9c7d0"/>
+<text transform="translate(100,234.5) rotate(-90)" text-anchor="middle" font-size="14" font-family="Arial" fill="#415a6c">Finanzas y Control</text>
+<rect x="74" y="337" width="1696" height="233" fill="none" stroke="#b9c7d0" stroke-width="1"/>
+<rect x="74" y="337" width="42" height="233" fill="#eaf0f4" stroke="#b9c7d0"/>
+<text transform="translate(100,453.5) rotate(-90)" text-anchor="middle" font-size="14" font-family="Arial" fill="#415a6c">Sistema (automático)</text>
+<polyline points="168,107 168,214" fill="none" stroke="#8798aa" stroke-width="1.7" stroke-dasharray="6 6" marker-end="url(#msg)"/>
+<circle cx="168" cy="107" r="4" fill="white" stroke="#8798aa" stroke-width="1"/>
+<text x="178" y="139" font-family="Arial" font-size="11" fill="#586b81">Comprobante</text>
+<polyline points="1129,499 1129,595" fill="none" stroke="#8798aa" stroke-width="1.7" stroke-dasharray="6 6" marker-end="url(#msg)"/>
+<circle cx="1129" cy="499" r="4" fill="white" stroke="#8798aa" stroke-width="1"/>
+<text x="1138" y="553" font-family="Arial" font-size="11" fill="#586b81">Orden</text>
+<polyline points="1190,595 1190,499" fill="none" stroke="#8798aa" stroke-width="1.7" stroke-dasharray="6 6" marker-end="url(#msg)"/>
+<circle cx="1190" cy="595" r="4" fill="white" stroke="#8798aa" stroke-width="1"/>
+<text x="1202" y="553" font-family="Arial" font-size="11" fill="#586b81">Confirmación</text>
+<polyline points="192,237 264,237" fill="none" stroke="#34465c" stroke-width="1.8" marker-end="url(#seq)"/>
+<polyline points="409,233 446,233 446,460 481,460" fill="none" stroke="#34465c" stroke-width="1.8" marker-end="url(#seq)"/>
+<polyline points="629,460 686,460" fill="none" stroke="#34465c" stroke-width="1.8" marker-end="url(#seq)"/>
+<polyline points="713,434 713,268" fill="none" stroke="#34465c" stroke-width="1.8" marker-end="url(#seq)"/>
+<rect x="716" y="348" width="29" height="16" fill="white" opacity=".92"/><text x="724" y="360" font-size="12" font-family="Arial" fill="#263d50">No</text>
+<polyline points="673,230 650,230 650,390 555,390 555,420" fill="none" stroke="#34465c" stroke-width="1.8" marker-end="url(#seq)"/>
+<polyline points="740,460 825,460 825,233 862,233" fill="none" stroke="#34465c" stroke-width="1.8" marker-end="url(#seq)"/>
+<rect x="743" y="434" width="29" height="16" fill="white" opacity=".92"/><text x="751" y="446" font-size="12" font-family="Arial" fill="#263d50">Sí</text>
+<polyline points="1002,234 1036,234 1036,459 1071,459" fill="none" stroke="#34465c" stroke-width="1.8" marker-end="url(#seq)"/>
+<polyline points="1214,460 1274,460" fill="none" stroke="#34465c" stroke-width="1.8" marker-end="url(#seq)"/>
+<polyline points="1302,432 1302,238 1324,238" fill="none" stroke="#34465c" stroke-width="1.8" marker-end="url(#seq)"/>
+<rect x="1302" y="340" width="29" height="16" fill="white" opacity=".92"/><text x="1310" y="352" font-size="12" font-family="Arial" fill="#263d50">No</text>
+<polyline points="1466,238 1490,238" fill="none" stroke="#34465c" stroke-width="1.8" marker-end="url(#seq)"/>
+<polyline points="1330,460 1437,460" fill="none" stroke="#34465c" stroke-width="1.8" marker-end="url(#seq)"/>
+<rect x="1348" y="433" width="29" height="16" fill="white" opacity=".92"/><text x="1356" y="445" font-size="12" font-family="Arial" fill="#263d50">Sí</text>
+<polyline points="1581,460 1660,460" fill="none" stroke="#34465c" stroke-width="1.8" marker-end="url(#seq)"/>
+<circle cx="169.0" cy="237.0" r="20.0" fill="white" stroke="#2c485f" stroke-width="2"/>
+<text x="169.0" y="204" text-anchor="middle" font-size="11.5" font-family="Arial" fill="#274052">Obligación recibida</text>
+<rect x="264" y="198" width="145" height="75" rx="12" fill="#fff" stroke="#314e62" stroke-width="2"/>
+<text x="336.5" y="222.62599999999998" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#193348">Registrar</text><text x="336.5" y="238.326" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#193348">obligación y</text><text x="336.5" y="254.02599999999998" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#193348">vencimiento</text>
+<rect x="481" y="420" width="148" height="80" rx="12" fill="#fff" stroke="#314e62" stroke-width="2"/>
+<text x="555.0" y="447.126" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#193348">Verificar</text><text x="555.0" y="462.82599999999996" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#193348">proveedor,</text><text x="555.0" y="478.526" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#193348">importe y saldo</text>
+<path d="M713.0,434 L740,461.0 L713.0,488 L686,461.0 Z" fill="#fff" stroke="#2b465e" stroke-width="2"/><path d="M705.0,453.0 L721.0,469.0 M721.0,453.0 L705.0,469.0" stroke="#2b465e" stroke-width="2"/>
+<text x="713.0" y="424" text-anchor="middle" font-size="12" font-family="Arial" fill="#28485b">¿Datos válidos?</text>
+<rect x="673" y="196" width="145" height="72" rx="12" fill="#fff" stroke="#314e62" stroke-width="2"/>
+<text x="745.5" y="226.976" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#193348">Corregir datos</text><text x="745.5" y="242.67600000000002" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#193348">faltantes</text>
+<rect x="862" y="198" width="140" height="70" rx="12" fill="#fff" stroke="#314e62" stroke-width="2"/>
+<text x="932.0" y="227.976" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#193348">Autorizar y</text><text x="932.0" y="243.67600000000002" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#193348">programar pago</text>
+<rect x="1071" y="421" width="143" height="78" rx="12" fill="#fff" stroke="#314e62" stroke-width="2"/>
+<text x="1142.5" y="447.126" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#193348">Enviar</text><text x="1142.5" y="462.82599999999996" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#193348">instrucción al</text><text x="1142.5" y="478.526" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#193348">banco</text>
+<path d="M1302.0,432 L1330,460.0 L1302.0,488 L1274,460.0 Z" fill="#fff" stroke="#2b465e" stroke-width="2"/><path d="M1294.0,452.0 L1310.0,468.0 M1310.0,452.0 L1294.0,468.0" stroke="#2b465e" stroke-width="2"/>
+<text x="1302.0" y="422" text-anchor="middle" font-size="12" font-family="Arial" fill="#28485b">¿Confirmado?</text>
+<rect x="1324" y="201" width="142" height="75" rx="12" fill="#fff" stroke="#314e62" stroke-width="2"/>
+<text x="1395.0" y="233.476" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#193348">Analizar pago</text><text x="1395.0" y="249.17600000000002" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#193348">rechazado</text>
+<circle cx="1513.0" cy="238.0" r="20.0" fill="white" stroke="#2c485f" stroke-width="4"/>
+<text x="1513.0" y="205" text-anchor="middle" font-size="11.5" font-family="Arial" fill="#274052">Pago pendiente</text>
+<rect x="1437" y="422" width="144" height="76" rx="12" fill="#fff" stroke="#314e62" stroke-width="2"/>
+<text x="1509.0" y="454.976" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#193348">Registrar pago y</text><text x="1509.0" y="470.676" text-anchor="middle" font-size="13" font-family="Arial, sans-serif" fill="#193348">recalcular saldo</text>
+<circle cx="1684.0" cy="464.0" r="21.0" fill="white" stroke="#2c485f" stroke-width="4"/>
+<text x="1684.0" y="430" text-anchor="middle" font-size="11.5" font-family="Arial" fill="#274052">Obligación actualizada</text>
+</svg>
