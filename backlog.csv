@@ -1,0 +1,4 @@
+﻿ID,Título,Historia de usuario,Estado inicial propuesto,Prioridad,Referencia
+HU-01,"Gestión de contratos, proyectos y horas","Como integrante de Comercialización o Desarrollo, quiero registrar y consultar clientes, contratos, proyectos y horas trabajadas, para contar con información consistente que sirva de base a la facturación.",Por Hacer,Alta,docs/historias-de-usuario.md
+HU-02,Preparación y emisión de facturas,"Como integrante de Finanzas y Control, quiero preparar y revisar facturas con datos de contratos y proyectos, para emitir comprobantes coherentes y controlar vencimientos.",Por Hacer,Alta,docs/historias-de-usuario.md
+HU-03,Control de cobranzas y pagos,"Como integrante de Finanzas y Control, quiero registrar cobros y pagos y actualizar saldos, para conocer cuentas y vencimientos sin duplicar cálculos.",Por Hacer,Alta,docs/historias-de-usuario.md
